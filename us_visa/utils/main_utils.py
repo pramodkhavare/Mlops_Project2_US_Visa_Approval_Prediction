@@ -127,3 +127,15 @@ def drop_columns(df: pd.DataFrame, cols: list)-> pd.DataFrame:
         return df
     except Exception as e:
         raise ClassificationException(e, sys) from e
+
+def check_lists_match(list1, list2):
+    # Check if the lengths of the lists are different
+    if len(list1) != len(list2):
+        return False
+    
+    # Compare each element of the lists
+    for i in range(len(list1)):
+        if list1[i] != list2[i]:
+            return False  # If any element doesn't match, return False
+    
+    return True

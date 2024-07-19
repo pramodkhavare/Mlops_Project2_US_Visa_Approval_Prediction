@@ -1,0 +1,25 @@
+
+mongo_db_config :
+  database_name : "US_VISA"
+  collection_name : "visa_data"
+  connection_url : "mongodb+srv://pramodkhavare2000:{password}@cluster0.o40klkb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+
+
+training_pipeline_config :
+  pipeline_name : visa_pipeline 
+  artifact_dir : artifact
+
+data_ingestion_config :
+  data_ingestion_dir : 'data_ingestion'
+  raw_data_dir : raw_data
+  ingested_dir : ingested_data 
+  ingested_train_dir : train 
+  ingested_test_dir : test
+  data_ingestion_split_ratio : 0.2 
+
+data_validation_config :
+  data_validation_dir : 'data_validation'
+  schema_dir: config
+  schema_file_name : schema.yaml 
+  report_file_name : report.json
+  report_page_file_name : report.html 
