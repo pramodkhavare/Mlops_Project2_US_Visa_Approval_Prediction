@@ -81,8 +81,8 @@ class DataValidation():
             validation_status = train_validation_status and test_validation_status
             logging.info(f'Checked columns of train and test file : [{validation_status}]')
             if not validation_status:
-                logging.info("We cant procees because there is mismatch in required columns and available columns")
-                raise Exception(f"Expected and actual column mismatch")
+                logging.error("Cannot proceed due to mismatch in required and available columns")
+                # raise Exception("Expected and actual column mismatch")
         
             return validation_status       
             
@@ -152,6 +152,15 @@ class DataValidation():
         except Exception as e:
             raise ClassificationException(e,sys) from e
         
+    @staticmethod
+    def save_data_in_respective_folder(data ,validation_status :bool ,path :str ):
+        try:
+            if validation_status:
+                pass 
+                 
+        except Exception as e:
+            raise ClassificationException(e,sys) from e
+        
     def initiate_data_validation(self):
         try:
             validation_error_msg =""
@@ -161,17 +170,24 @@ class DataValidation():
             schema_file_path = self.data_validation_config.schema_file_path
             report_file_path = self.data_validation_config.report_file_path 
             report_page_file_path = self.data_validation_config.report_page_file_path
-            
+            valid_data_dir = self.data_validation_config.valid_data_dir
+            invalid_data_dir = self.data_validation_config.invalid_data_dir
             
             validation_status = self.fianal_data_validation(train_file_path ,test_file_path
                                                             ,schema_file_path) #True or False
             logging.info(f'We checked all columns is test and train dataset and Validation Status is : {validation_status} ')
-            
+            train_data ,test_data = pd.read_csv(train_file_path) ,pd.read_csv(test_file_path)
             if validation_status :
                 drift_status = self.save_data_drift_report(train_file_path=train_file_path ,test_file_path=test_file_path ,
                                                            report_file_path=report_file_path)
                 self.save_data_drift_report_html_page(train_file_path=train_file_path ,test_file_path=test_file_path,
                                                       page_path=report_page_file_path)
+                
+                
+                
+                os.makedirs(valid_data_dir ,exist_ok=True)
+                train_data.to_csv(os.path.join(valid_data_dir ,'train_data.csv') ,index=False ,header=True)
+                test_data.to_csv(os.path.join(valid_data_dir , 'test_data.csv') ,index=False ,header=True)
                 
                 if drift_status:
                     logging.info(f"Drift Detected")
@@ -180,13 +196,26 @@ class DataValidation():
                     validation_error_msg = f"No Drift Is Detected So We can Proceed With Dataste"
                     
             else:
+                
+                os.makedirs(invalid_data_dir ,exist_ok=True)
+                train_data.to_csv(os.path.join(invalid_data_dir ,'train_data.csv') ,index=False ,header=True)
+                test_data.to_csv(os.path.join(invalid_data_dir , 'test_data.csv') ,index=False ,header=True)
+                
                 validation_error_msg +=f"Unable to Proceed as There is schema mismatch in between expecting and actual columns"
-                logging.info(f"Validation Error : {validation_error_msg}")
+                
+                logging.error(f"Validation Error : {validation_error_msg}")
+            
+            
+            
                 
             data_validation_artifacts = DataValidationArtifacs(
                 validation_status= validation_status ,
                 message= validation_error_msg ,
-                report_page_file_path= report_file_path
+                report_page_file_path= report_file_path ,
+                invalid_test_data_file_path= os.path.join(invalid_data_dir , 'test_data.csv'),
+                invalid_train_data_file_path= os.path.join(invalid_data_dir ,'train_data.csv'),
+                valid_train_data_file_path= os.path.join(valid_data_dir ,'train_data.csv'),
+                valid_test_data_file_path= os.path.join(valid_data_dir ,'test_data.csv')
             )
             logging.info(f"validation Artifacts : {data_validation_artifacts}")
             return data_validation_artifacts

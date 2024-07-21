@@ -1,6 +1,6 @@
-from us_visa.entity.config_entity import DataIngestionConfig, TrainingPipelineConfig, MongoDBCOnfig ,DataValidationConfig
+from us_visa.entity.config_entity import DataIngestionConfig, TrainingPipelineConfig, MongoDBCOnfig ,DataValidationConfig ,DataTransformationConfig
     
-from us_visa.entity.artifact_entity import DataIngestionArtifact 
+from us_visa.entity.artifact_entity import DataIngestionArtifact ,DataTransformationArtifact
 
 from us_visa.constants import * 
 from us_visa.exception import ClassificationException
@@ -127,16 +127,69 @@ class VisaClassficationConfiguration():
                 data_validation_dir_key ,
                 config[DATA_VALIDATION_REPORT_PAGE_FILE_NAME_KEY]
             )
+            valid_data_dir = os.path.join(
+                data_validation_dir_key ,
+                config[DATA_VALIDATION_VALID_DATA_DIR_KEY]
+            )
+            invalid_data_dir = os.path.join(
+                data_validation_dir_key ,
+                config[DATA_VALIDATION_INVALID_DATA_DIR_KEY]
+            )
+            
             data_validation_config = DataValidationConfig(
                 schema_file_path= schema_file_path,
                 report_file_path= report_file_path,
-                report_page_file_path= report_page_file_path
+                report_page_file_path= report_page_file_path ,
+                valid_data_dir= valid_data_dir,
+                invalid_data_dir=  invalid_data_dir
             )
             return data_validation_config
         except Exception as e:
             raise ClassificationException (e ,sys)
         
-        
+    def get_data_transformation_config(self) -> DataTransformationConfig:
+        try:
+            config = self.config_info[DATA_TRANSFORMATION_CONFIG_KEY]
+            
+            data_transformation_dir_key = os.path.join(
+                self.training_pipeline_config.artifact_dir ,
+                self.time_stamp ,
+                config[DATA_TRANSFORMATION_DIR_KEY]
+            ) 
+            
+            transformed_train_dir = os.path.join(
+                data_transformation_dir_key ,
+                config[DATA_TRANSFORMATION_TRAIN_DIR_KEY]
+            )
+            
+            transformed_test_dir = os.path.join(
+                data_transformation_dir_key ,
+                config[DATA_TRANSFORMATION_TEST_DIR_KEY]
+            )
+            
+            preprocessing_obj_dir = os.path.join(
+                data_transformation_dir_key ,
+                config[DATA_TRANSFORMATION_PREPROCESSING_DIR_KEY]
+            )
+            
+            preprocessing_object_file_name = config[DATA_TRANSFORMATION_PREPROCESSING_OBJECT_FILE_NAME_KEY]
+            
+            schema_file_path = os.path.join(
+                ROOT_DIR ,
+                config[DATA_TRANSFORMATION_SCHEMA_DIR_KEY] ,
+                config[DATA_TRANSFORMATION_SCHEMA_FILE_NAME_KEY]
+            )
+            
+            data_transformation_config = DataTransformationConfig(
+                schema_file_path= schema_file_path,
+                transformed_train_dir= transformed_train_dir,
+                transformed_test_dir= transformed_test_dir,
+                preprocessing_obj_dir= preprocessing_obj_dir,
+                preprocessing_object_file_name= preprocessing_object_file_name
+            ) 
+            return data_transformation_config
+        except Exception as e:
+            raise ClassificationException (e ,sys) from e   
         
 if __name__ == "__main__":
     visaclassification = VisaClassficationConfiguration()

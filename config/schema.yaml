@@ -11,6 +11,7 @@ columns:
   unit_of_wage: category
   full_time_position: category
   case_status: category
+
   
 target_columns : 
   case_status
@@ -29,4 +30,25 @@ categorical_column :
   region_of_employment
   unit_of_wage
   full_time_position
-  case_status
+  case_status 
+
+ordinal_encoder_columns : 
+  has_job_experience
+  requires_job_training
+  full_time_position
+  education_of_employee
+  
+one_hot_encoder_columns :
+  continent
+  unit_of_wage
+  region_of_employment
+ 
+
+transform_columns :
+  no_of_employees
+  company_age
+
+# transform_columns :
+#   no_of_employees
+  
+

@@ -81,7 +81,7 @@ def load_object(file_path: str) -> object:
     
 
 
-def save_numpy_array_data(file_path: str, array: np.array):
+def save_numpy_array(file_path: str, array: np.array):
     """
     Save numpy array data to file
     file_path: str location of file to save
@@ -96,7 +96,7 @@ def save_numpy_array_data(file_path: str, array: np.array):
         raise ClassificationException(e, sys) from e
     
 
-def load_numpy_array_data(file_path: str) -> np.array:
+def load_array(file_path: str) -> np.array:
     """
     load numpy array data from file
     file_path: str location of file to load

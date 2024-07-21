@@ -30,3 +30,15 @@ class DataValidationConfig:
     schema_file_path :str 
     report_file_path :str 
     report_page_file_path :str 
+    valid_data_dir :str 
+    invalid_data_dir:str
+    
+    
+@dataclass(frozen=True)
+class DataTransformationConfig:
+    schema_file_path :str
+    transformed_train_dir :str 
+    transformed_test_dir :str
+    preprocessing_obj_dir :str
+    preprocessing_object_file_name :str 
+    

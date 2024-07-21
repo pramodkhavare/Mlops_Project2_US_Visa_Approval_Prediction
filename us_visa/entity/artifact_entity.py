@@ -13,4 +13,13 @@ class DataValidationArtifacs:
     validation_status :bool 
     message :str 
     report_page_file_path :str 
-    
+    valid_train_data_file_path :str 
+    invalid_train_data_file_path :str 
+    valid_test_data_file_path :str 
+    invalid_test_data_file_path :str 
+
+@dataclass(frozen=True)
+class DataTransformationArtifact:
+    transformed_train_file_path :str 
+    transformed_test_file_path :str 
+    preprocessor_file_path :str 
