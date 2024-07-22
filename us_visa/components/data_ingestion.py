@@ -1,5 +1,5 @@
 from us_visa.configuration import VisaClassficationConfiguration
-from us_visa.configuration import DataIngestionConfig ,MongoDBCOnfig
+from us_visa.entity.config_entity import DataIngestionConfig ,MongoDBCOnfig
 from us_visa.entity.artifact_entity import DataIngestionArtifact
 from us_visa.logger import logging
 from us_visa.exception import ClassificationException

@@ -1,6 +1,6 @@
-from us_visa.entity.config_entity import DataIngestionConfig, TrainingPipelineConfig, MongoDBCOnfig ,DataValidationConfig ,DataTransformationConfig
+from us_visa.entity.config_entity import DataIngestionConfig, TrainingPipelineConfig, MongoDBCOnfig ,DataValidationConfig ,DataTransformationConfig ,ModelTrainingConfig
     
-from us_visa.entity.artifact_entity import DataIngestionArtifact ,DataTransformationArtifact
+from us_visa.entity.artifact_entity import DataIngestionArtifact ,DataTransformationArtifact ,ModelTrainingArtifacts
 
 from us_visa.constants import * 
 from us_visa.exception import ClassificationException
@@ -14,7 +14,9 @@ class VisaClassficationConfiguration():
                  config_file_path = CONFIG_FILE_PATH ,
                  current_time_stamp = CURRENT_TIME_STAMP):
         try:
+         
             self.config_info = read_yaml(yaml_file_path= config_file_path)
+           
             self.time_stamp = current_time_stamp 
             self.training_pipeline_config = self.get_training_pipeline_config()
         except Exception as e:
@@ -190,10 +192,48 @@ class VisaClassficationConfiguration():
             return data_transformation_config
         except Exception as e:
             raise ClassificationException (e ,sys) from e   
+    
+    def get_model_training_config(self) ->ModelTrainingConfig:
+        try:
+            config = self.config_info[MODEL_TRAINING_CONFIG_KEY]
+            
+            model_training_dir_key = os.path.join(
+                self.training_pipeline_config.artifact_dir ,
+                self.time_stamp ,
+                config[MODEL_TRAINING_DIR_NAME_KEY]
+            )
+            trained_model_dir_path =os.path.join(
+                model_training_dir_key ,
+                config[MODEL_TRAINING_TRAINED_MODEL_DIR_KEY]
+                
+            )
+            trained_model_name = config[MODEL_TRAINING_TRAINED_MODEL_FILE_NAME_KEY]
+            
+            base_accuracy = config[MODEL_TRAINING_TRAINED_MODEL_BASE_ACCURACY]
+            
+            model_config_file_path = os.path.join(
+                ROOT_DIR ,
+                CONFIG_DIR ,
+                MODEL_CONFIG_FILE_NAME
+            )
+            
+            model_training_config = ModelTrainingConfig(
+                trained_model_dir_path= trained_model_dir_path,
+                trained_model_name= trained_model_name,
+                base_accuracy= base_accuracy ,
+                model_config_file_path= model_config_file_path
+            )
+            print(model_training_config)
+            return model_training_config
+        except Exception as e:
+            raise ClassificationException (e ,sys)
+        
+        
+        
         
 if __name__ == "__main__":
     visaclassification = VisaClassficationConfiguration()
-    print(visaclassification.get_mongodb_config())
+    print(visaclassification.get_model_training_config())
     
     
     

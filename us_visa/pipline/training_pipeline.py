@@ -3,9 +3,10 @@ from us_visa.configuration import VisaClassficationConfiguration
 from us_visa.components.data_ingestion import DataIngestion
 from us_visa.components.data_validation import DataValidation
 from us_visa.components.data_transformation import DataTransformation
+from us_visa.components.model_trainer import ModelTrainer
 from us_visa.exception import ClassificationException 
 from us_visa.logger import logging
-from us_visa.entity.artifact_entity import DataIngestionArtifact ,DataValidationArtifacs, DataTransformationArtifact
+from us_visa.entity.artifact_entity import DataIngestionArtifact ,DataValidationArtifacs, DataTransformationArtifact ,ModelTrainingArtifacts
 
 
 import os ,sys
@@ -63,14 +64,26 @@ class TrainPipeline():
             return data_transformation_artifacts
         except Exception as e:
             raise ClassificationException (e ,sys) from e 
-        
+    def start_model_training(self ,data_transformation_artifact : DataTransformationArtifact) ->ModelTrainingArtifacts:
+        try:
+            model_training_config = self.config.get_model_training_config()
+            data_transformation_artifact =  data_transformation_artifact
+            
+            model_training = ModelTrainer(
+                model_training_config= model_training_config ,
+                data_transformation_artifacts= data_transformation_artifact 
+            )
+            model_training_artifacts = model_training.initiate_model_training()
+            
+            return model_training_artifacts
+        except Exception as e:
+            raise ClassificationException (e ,sys) from e
     def run_pipeline(self):
         try:
             data_ingestion_artifacts = self.start_data_ingestion() 
             data_validation_artifacts = self.start_data_validation(data_ingestion_artifacts=data_ingestion_artifacts)
-            print(1122)
-            print(data_validation_artifacts)
             data_transformation_artifacts = self.start_data_transformation(data_validation_artifact= data_validation_artifacts)
+            model_training_artifacts = self.start_model_training(data_transformation_artifact=data_transformation_artifacts)
         except Exception as e:
             raise ClassificationException (e ,sys) from e
         

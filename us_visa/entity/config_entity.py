@@ -32,7 +32,7 @@ class DataValidationConfig:
     report_page_file_path :str 
     valid_data_dir :str 
     invalid_data_dir:str
-    
+
     
 @dataclass(frozen=True)
 class DataTransformationConfig:
@@ -41,4 +41,10 @@ class DataTransformationConfig:
     transformed_test_dir :str
     preprocessing_obj_dir :str
     preprocessing_object_file_name :str 
-    
+
+@dataclass(frozen=True)
+class ModelTrainingConfig:
+    trained_model_dir_path :str 
+    trained_model_name :str 
+    base_accuracy :str 
+    model_config_file_path :str

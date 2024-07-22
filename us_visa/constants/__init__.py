@@ -14,9 +14,12 @@ CURRENT_TIME_STAMP = f"{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}"
 
 ROOT_DIR = os.getcwd()  
 CONFIG_DIR = "config"
+
 CONFIG_FILE_NAME = "config.yaml"
 CONFIG_FILE_PATH = os.path.join(ROOT_DIR , CONFIG_DIR ,CONFIG_FILE_NAME)
 
+MODEL_CONFIG_FILE_NAME = 'model.yaml'
+MODEL_CONFIG_FILE_PATH = os.path.join(ROOT_DIR ,CONFIG_DIR ,MODEL_CONFIG_FILE_NAME)
 
 #Hard Coded variable related with MongoDB
 MONGODB_CONFIG_KEY = "mongo_db_config"
@@ -72,3 +75,10 @@ SCHEMA_CATEGORICAL_COLUMN_KEY = 'categorical_column'
 SCHEMA_ORDINAL_ENCODER_COLUMN_KEY = 'ordinal_encoder_columns'
 SCHEMA_ONE_HOT_ENCODER_COLUMN_KEY = 'one_hot_encoder_columns'
 SCHEMA_TRANSFORM_COLUMN_KEY = 'transform_columns'
+
+#VARIABLES RELATED WITH MODEL TRAINING 
+MODEL_TRAINING_CONFIG_KEY = 'model_training_config'
+MODEL_TRAINING_DIR_NAME_KEY =  'model_training_dir'
+MODEL_TRAINING_TRAINED_MODEL_DIR_KEY = 'trained_model_dir'
+MODEL_TRAINING_TRAINED_MODEL_FILE_NAME_KEY = 'model_file_name'
+MODEL_TRAINING_TRAINED_MODEL_BASE_ACCURACY = 'base_accuracy'

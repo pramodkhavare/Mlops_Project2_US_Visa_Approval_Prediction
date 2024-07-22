@@ -23,3 +23,16 @@ class DataTransformationArtifact:
     transformed_train_file_path :str 
     transformed_test_file_path :str 
     preprocessor_file_path :str 
+
+
+@dataclass(frozen=True)
+class ClassificationMetricArtifact:
+    """Your Model Evaluation """
+    f1_score :float 
+    precision :float 
+    recall_score :float
+@dataclass(frozen=True)
+class ModelTrainingArtifacts :
+    trained_model_file_path :str 
+    metrics_artifact : ClassificationMetricArtifact
+    
